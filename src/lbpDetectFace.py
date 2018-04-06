@@ -9,9 +9,13 @@ def detect_faces(f_cascade, colored_img, scale_factor=1.1):
 
     faces = f_cascade.detectMultiScale(gray, scaleFactor=scale_factor, minNeighbors=6)
 
+    return faces
+
+
+def draw_faces(img, faces):
     # draw rectangles
     for (x, y, w, h) in faces:
-        cv2.rectangle(img_copy, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-    return img_copy
+    return img
 
