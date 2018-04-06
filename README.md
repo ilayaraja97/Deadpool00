@@ -1,20 +1,6 @@
 # Deadpool00
 ## Setting up environment
 
-#### Installing OpenCV from prebuilt binaries
-
-* Below Python packages are to be downloaded and installed to their default locations.
-  1.1. Python-2.7.x.
-  1.2. Numpy.
-  1.3. Matplotlib (Matplotlib is optional, but recommended since we use it a lot in our tutorials).
-* Install all packages into their default locations. Python will be installed to C:/Python27/.
-* After installation, open Python IDLE. Enter import numpy and make sure Numpy is working fine.
-* Download latest OpenCV release from sourceforge site and double-click to extract it.
-* Goto opencv/build/python/2.7 folder.
-* Copy cv2.pyd to C:/Python27/lib/site-packeges.
-* Open Python IDLE and type following codes in Python terminal.
-````
-    >>> import cv2
-    >>> print cv2.__version__
-````
-If the results are printed out without any errors, congratulations !!! You have installed OpenCV-Python successfully.
+###### Installing OpenCV from prebuilt binaries
+[Windows](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_setup/py_setup_in_windows/py_setup_in_windows.html#installing-opencv-from-prebuilt-binaries) | 
+[Ubuntu](https://docs.opencv.org/trunk/d2/de6/tutorial_py_setup_in_ubuntu.html)
