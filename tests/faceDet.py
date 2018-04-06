@@ -2,7 +2,7 @@ import cv2
 
 from src.lbpDetectFace import detect_faces
 
-lbp_face_cascade = cv2.CascadeClassifier('data/lbpcascade_frontalface.xml')
+lbp_face_cascade = cv2.CascadeClassifier('../data/lbpcascade_frontalface.xml')
 
 cv2.namedWindow("exit on ESC")
 vc = cv2.VideoCapture(0)
