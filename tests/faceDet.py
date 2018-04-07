@@ -1,5 +1,8 @@
 import cv2
-
+#import sys
+#sys.path.insert(0, "/home/chandu/Desktop/Deadpool00/src")
+#print(sys.path)
+#from src import lbpDetectFace
 from src.lbpDetectFace import detect_faces, draw_faces
 
 lbp_face_cascade = cv2.CascadeClassifier('../data/lbpcascade_frontalface.xml')
