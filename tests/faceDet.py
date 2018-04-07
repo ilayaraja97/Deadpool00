@@ -3,7 +3,7 @@ import cv2
 #sys.path.insert(0, "/home/chandu/Desktop/Deadpool00/src")
 #print(sys.path)
 #from src import lbpDetectFace
-from src.lbpDetectFace import detect_faces, draw_faces
+from src.lbpDetectFace import detect_faces, draw_faces, draw_largest_face
 
 lbp_face_cascade = cv2.CascadeClassifier('../data/lbpcascade_frontalface.xml')
 
@@ -19,9 +19,11 @@ f = frame
 
 while rval:
     cv2.imshow("exit on ESC", cv2.flip(f, 1))
+# to write image as a new png file
+#cv2.imwrite("cropped_test_image.png", f)
     rval, frame = vc.read()
-    f = draw_faces(frame, detect_faces(lbp_face_cascade, frame))
-    key = cv2.waitKey(20)
+    f = draw_largest_face(frame, detect_faces(lbp_face_cascade, frame))
+    key = cv2.waitKey(50)
     if key == 27:  # exit on ESC
         break
 cv2.destroyWindow("exit on ESC")

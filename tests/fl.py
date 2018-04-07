@@ -31,16 +31,15 @@ def draw_faces(img, faces):
             b = y
             c = w
             d = h
-    print(x, y, w, h)
-#cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    for (x, y, w, h) in faces:
-        if (x == a)and(y == b)and(w == c)and(h == d):
-            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    return img
+    cv2.rectangle(img, (a, b), (a + c, b + d), (0, 255, 0), 2)
+    # cropping the image
+    crop_img = img[b:b + d, a:a + c]
+    return crop_img
 
 
 f = draw_faces(img, detect_faces(lbp_face_cascade, img))
 cv2.imshow("exit on ESC", cv2.flip(f, 1))
+cv2.imwrite("cropped_test_image.png", f)
 cv2.waitKey(0)
 
 # close the windows
