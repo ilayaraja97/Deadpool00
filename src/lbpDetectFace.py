@@ -15,11 +15,11 @@ def detect_faces(f_cascade, colored_img, scale_factor=1.1):
 def draw_faces(img, faces):
     # draw rectangles
     for (x, y, w, h) in faces:
-       cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
     return img
 
 
-def draw_largest_face(img, faces):
+def get_largest_face(img, faces):
     # draw and crop largest face
     largest_face = 0
     a = b = c = d = 0
@@ -31,6 +31,5 @@ def draw_largest_face(img, faces):
             c = w
             d = h
 
-    cv2.rectangle(img, (a, b), (a + c, b + d), (0, 255, 0), 2)
     crop_img = img[b:b + d, a:a + c]
     return crop_img

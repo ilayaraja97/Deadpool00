@@ -1,6 +1,6 @@
 import cv2
 
-from src.lbpDetectFace import detect_faces, draw_faces
+from src.lbpDetectFace import detect_faces, draw_faces, get_largest_face
 
 lbp_face_cascade = cv2.CascadeClassifier('../data/lbpcascade_frontalface.xml')
 
@@ -17,7 +17,9 @@ f = frame
 while rval:
     cv2.imshow("exit on ESC", cv2.flip(f, 1))
     rval, frame = vc.read()
-    f = draw_faces(frame, detect_faces(lbp_face_cascade, frame))
+    temp = get_largest_face(frame, detect_faces(lbp_face_cascade, frame))
+    if temp.shape != (0, 0, 3):
+        f = temp
     key = cv2.waitKey(20)
     if key == 27:  # exit on ESC
         break
