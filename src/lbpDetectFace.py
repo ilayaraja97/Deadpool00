@@ -16,6 +16,20 @@ def draw_faces(img, faces):
     # draw rectangles
     for (x, y, w, h) in faces:
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
     return img
 
+
+def get_largest_face(img, faces):
+    # draw and crop largest face
+    largest_face = 0
+    a = b = c = d = 0
+    for (x, y, w, h) in faces:
+        if (w*h) >= largest_face:
+            largest_face = w*h
+            a = x
+            b = y
+            c = w
+            d = h
+
+    crop_img = img[b:b + d, a:a + c]
+    return crop_img
