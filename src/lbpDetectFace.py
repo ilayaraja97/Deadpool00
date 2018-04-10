@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-
+import math
 
 def detect_faces(f_cascade, colored_img, scale_factor=1.1):
     img_copy = np.copy(colored_img)
@@ -8,15 +8,58 @@ def detect_faces(f_cascade, colored_img, scale_factor=1.1):
     gray = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
 
     faces = f_cascade.detectMultiScale(gray, scaleFactor=scale_factor, minNeighbors=6)
-
     return faces
 
+def crop_rot_images(frame, lbp_face_cascade):
+    center = get_largest_face(frame, detect_faces(lbp_face_cascade, frame))
+    left = get_largest_face(rotate_img(frame, 45), detect_faces(lbp_face_cascade, rotate_img(frame, 45)))
+    right = get_largest_face(rotate_img(frame, -45), detect_faces(lbp_face_cascade, rotate_img(frame, -45)))
+    x, y, z = center.shape
+    p, q, r = left.shape
+    temp = center
+    if x * y < p * q:
+        x, y, z = p, q, r
+        temp = left
+    p, q, r = right.shape
+    if x * y < p * q:
+        x, y, z = p, q, r
+        temp = right
+    return temp
+
+def rotate_img(img, angle):
+    num_rows, num_cols = img.shape[:2]
+    rotation_mat = cv2.getRotationMatrix2D((num_cols / 2, num_rows / 2), angle, 1)
+    return cv2.warpAffine(img, rotation_mat, (num_cols, num_rows))
 
 def draw_faces(img, faces):
     # draw rectangles
     for (x, y, w, h) in faces:
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
     return img
+
+def draw_tilt_faces(frame, cascade):
+    num_rows, num_cols = frame.shape[:2]
+    center = detect_faces(cascade, frame)
+    left = detect_faces(cascade, rotate_img(frame, 45))
+    right = detect_faces(cascade, rotate_img(frame, -45))
+    for (x, y, w, h) in center:
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    for (x, y, w, h) in left:
+        (a, b)=rotate_point(x,y,num_cols,num_rows,-45)
+        (c, d)=rotate_point(x+w,y+h,num_cols,num_rows,-45)
+        cv2.rectangle(frame, (int(a), int(b)), (int(c), int(d)), (0, 255, 0), 2)
+    for (x, y, w, h) in right:
+        (a, b) = rotate_point(x, y, num_cols, num_rows, 45)
+        (c, d) = rotate_point(x + w, y + h, num_cols, num_rows, 45)
+        cv2.rectangle(frame, (int(a), int(b)), (int(c), int(d)), (0, 255, 0), 2)
+    return frame
+
+def rotate_point(x, y, w, h, angle):
+    x0 = math.cos(math.radians(angle))*(x - w/2) + math.sin(math.radians(angle))*(y-h/2)
+    y0 = math.cos(math.radians(angle))*(y - h/2) - math.sin(math.radians(angle))*(x-w/2)
+    x0 = x0 + w/2
+    y0 = y0 + h/2
+    return x0, y0
 
 
 def get_largest_face(img, faces):
