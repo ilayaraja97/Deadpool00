@@ -18,8 +18,6 @@ while rval:
     cv2.imshow("exit on ESC", cv2.flip(f, 1))
     rval, frame = vc.read()
 
-
-
     f = draw_faces(frame, detect_faces(lbp_face_cascade, frame))
 
     key = cv2.waitKey(20)
