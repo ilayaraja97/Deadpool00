@@ -48,7 +48,7 @@ def draw_tilt_faces(frame, cascade):
     left = detect_faces(cascade, rotate_img(frame, 45))
     right = detect_faces(cascade, rotate_img(frame, -45))
     for (x, y, w, h) in center:
-        print((x, y, x + w, y + h))
+        # print((x, y, x + w, y + h))
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
     for (x, y, w, h) in left:
         (px, py) = rotate_point(x, y, num_cols, num_rows, -45)
