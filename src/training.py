@@ -33,14 +33,14 @@ def cnn_arch(x_train, y_train, epochs, batch_size, validation_split):
     print('     Train acc: ', train_acc[-1])
     print('Validation acc: ', val_acc[-1])
     print(' Overfit ratio: ', val_acc[-1] / train_acc[-1])
-    save_model()
+    save_model(model)
     return model
 
 
 def save_model(model):
     model_json = model.to_json()
-    with open("model.json", "w") as json_file:
+    with open("../data/model.json", "w") as json_file:
         json_file.write(model_json)
     # serialize weights to HDF5
-    model.save_weights("model.h5")
+    model.save_weights("../data/model.h5")
     print("Saved model to disk")
