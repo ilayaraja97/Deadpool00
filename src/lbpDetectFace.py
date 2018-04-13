@@ -12,7 +12,8 @@ def detect_faces(f_cascade, colored_img, scale_factor=1.1):
     return faces
 
 
-def crop_rot_images(frame, lbp_face_cascade):
+def crop_rot_images(frame, lbp_face_cascade, draw_face=False):
+    # optimization req
     center = get_largest_face(frame, detect_faces(lbp_face_cascade, frame))
     left = get_largest_face(rotate_img(frame, 45), detect_faces(lbp_face_cascade, rotate_img(frame, 45)))
     right = get_largest_face(rotate_img(frame, -45), detect_faces(lbp_face_cascade, rotate_img(frame, -45)))
@@ -26,6 +27,7 @@ def crop_rot_images(frame, lbp_face_cascade):
     if x * y < p * q:
         x, y, z = p, q, r
         temp = right
+
     return temp
 
 
@@ -77,7 +79,7 @@ def rotate_point(x, y, w, h, angle):
     return x0, y0
 
 
-def get_largest_face(img, faces):
+def get_largest_face(img, faces, draw_face=False):
     # draw and crop largest face
     largest_face = 0
     a = b = c = d = 0
@@ -88,6 +90,8 @@ def get_largest_face(img, faces):
             b = y
             c = w
             d = h
+    if draw_face:
+        cv2.rectangle(img, (a, b), (a+c, b+d), (0, 255, 0), 2)
 
     crop_img = img[b:b + d, a:a + c]
     return crop_img

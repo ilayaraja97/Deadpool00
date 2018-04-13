@@ -17,9 +17,9 @@ f = frame
 while rval:
     cv2.imshow("exit on ESC", cv2.flip(f, 1))
     rval, frame = vc.read()
-    temp = get_largest_face(frame, detect_faces(lbp_face_cascade, frame))
+    temp = get_largest_face(frame, detect_faces(lbp_face_cascade, frame), draw_face=True)
     if temp.shape != (0, 0, 3):
-        f = temp
+        f = frame
     key = cv2.waitKey(20)
     if key == 27:  # exit on ESC
         break
