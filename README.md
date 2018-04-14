@@ -10,7 +10,6 @@ Use ubuntu 64-bit Python 3
 ### Keras
 `$ sudo pip3 install keras`
 And run `testEnvironment.py`
-###
 ## Coding style
 We will stick to [PEP8](https://www.python.org/dev/peps/pep-0008/) coding style.
 

@@ -23,7 +23,7 @@ if vc.isOpened():  # try to get the first frame
     rval, frame = vc.read()
 else:
     rval = False
-f = frame
+f = cv2.flip(frame, 1)
 while rval:
     cv2.imshow("exit on ESC", f)
     rval, frame = vc.read()
@@ -43,6 +43,8 @@ while rval:
         #     fp.write('{},{},{},{},{},{},{}\n'.format(time.time(), angry, fear, happy, sad, surprise, neutral))
 
         f = frame
+    else:
+        f = cv2.flip(frame, 1)
     key = cv2.waitKey(20)
     if key == 27:  # exit on ESC
         break
