@@ -1,16 +1,20 @@
-import cv2
 import time
-import numpy as np
-import sys
-from keras.models import model_from_json
 
-from src.lbpDetectFace import crop_rot_images
+import cv2
+
+from src.detectFace import detect_faces, get_largest_face, crop_rot_images
 from src.testing import predict_emotion, put_emoji
-from src.lbpDetectFace import detect_faces, draw_faces, get_largest_face
 
-
+# set emotions (6)
 emotion_labels = ['angry', 'fear', 'happy', 'sad', 'surprise', 'neutral']
+# get lbp classifier
 lbp_face_cascade = cv2.CascadeClassifier('../data/lbpcascade_frontalface.xml')
+# set font
+font = cv2.FONT_HERSHEY_SIMPLEX
+bottomLeftCornerOfText = (80, 30)
+fontScale = 1
+fontColor = (0, 0, 0)
+lineType = 2
 
 cv2.namedWindow("exit on ESC")
 vc = cv2.VideoCapture(0)
@@ -19,16 +23,7 @@ if vc.isOpened():  # try to get the first frame
     rval, frame = vc.read()
 else:
     rval = False
-
 f = frame
-
-font                   = cv2.FONT_HERSHEY_SIMPLEX
-bottomLeftCornerOfText = (50,30)
-fontScale              = 1
-fontColor              = (0,0,0)
-lineType               = 2
-
-
 while rval:
     cv2.imshow("exit on ESC", f)
     rval, frame = vc.read()
@@ -39,13 +34,13 @@ while rval:
 
     if temp.shape != (0, 0, 3):
         angry, fear, happy, sad, surprise, neutral = predict_emotion(temp)
-        overlay, status = put_emoji(angry, fear, happy, sad, surprise, neutral, frame)
+        overlay, status = put_emoji(angry, fear, happy, sad, surprise, neutral)
         frame = cv2.flip(frame, 1)
         cv2.addWeighted(overlay, 0.9, frame[0:48, 0:48], 0.1, 0, frame[0:48, 0:48])
         cv2.putText(frame, status, bottomLeftCornerOfText, font, fontScale, fontColor, lineType)
 
-        with open('emotion.txt', 'a') as fp:
-            fp.write('{},{},{},{},{},{},{}\n'.format(time.time(), angry, fear, happy, sad, surprise, neutral))
+        # with open('emotion.txt', 'a') as fp:
+        #     fp.write('{},{},{},{},{},{},{}\n'.format(time.time(), angry, fear, happy, sad, surprise, neutral))
 
         f = frame
     key = cv2.waitKey(20)
