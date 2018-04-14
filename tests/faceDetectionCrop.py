@@ -1,6 +1,6 @@
 import cv2
 
-from src.lbpDetectFace import detect_faces, draw_faces, get_largest_face
+from src.detectFace import detect_faces, draw_faces, get_largest_face
 
 lbp_face_cascade = cv2.CascadeClassifier('../data/lbpcascade_frontalface.xml')
 
