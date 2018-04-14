@@ -33,8 +33,9 @@ while rval:
     cv2.imshow("exit on ESC", f)
     rval, frame = vc.read()
 
-    temp = crop_rot_images(frame,lbp_face_cascade, draw_face=True)
-    #temp = get_largest_face(frame, detect_faces(lbp_face_cascade, frame), draw_face=True)
+    # tilt optimization req
+    # temp = crop_rot_images(frame, lbp_face_cascade,draw_face=True)
+    temp = get_largest_face(frame, detect_faces(lbp_face_cascade, frame), draw_face=True)
 
     if temp.shape != (0, 0, 3):
         angry, fear, happy, sad, surprise, neutral = predict_emotion(temp)
