@@ -23,7 +23,7 @@ else:
 f = frame
 
 font                   = cv2.FONT_HERSHEY_SIMPLEX
-bottomLeftCornerOfText = (80,30)
+bottomLeftCornerOfText = (50,30)
 fontScale              = 1
 fontColor              = (0,0,0)
 lineType               = 2
@@ -33,8 +33,8 @@ while rval:
     cv2.imshow("exit on ESC", f)
     rval, frame = vc.read()
 
-    temp = crop_rot_images(frame,lbp_face_cascade, draw_face=True)
-    #temp = get_largest_face(frame, detect_faces(lbp_face_cascade, frame), draw_face=True)
+    #temp = crop_rot_images(frame,lbp_face_cascade)
+    temp = get_largest_face(frame, detect_faces(lbp_face_cascade, frame), draw_face=True)
 
     if temp.shape != (0, 0, 3):
         angry, fear, happy, sad, surprise, neutral = predict_emotion(temp)

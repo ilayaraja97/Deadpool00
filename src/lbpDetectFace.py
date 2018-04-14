@@ -14,9 +14,9 @@ def detect_faces(f_cascade, colored_img, scale_factor=1.1):
 
 def crop_rot_images(frame, lbp_face_cascade, draw_face=False):
     # optimization req
-    center = get_largest_face(frame, detect_faces(lbp_face_cascade, frame), draw_face=True)
-    left = get_largest_face(rotate_img(frame, 45), detect_faces(lbp_face_cascade, rotate_img(frame, 45)), draw_face=True)
-    right = get_largest_face(rotate_img(frame, -45), detect_faces(lbp_face_cascade, rotate_img(frame, -45)), draw_face=True)
+    center = get_largest_face(frame, detect_faces(lbp_face_cascade, frame))
+    left = get_largest_face(rotate_img(frame, 45), detect_faces(lbp_face_cascade, rotate_img(frame, 45)))
+    right = get_largest_face(rotate_img(frame, -45), detect_faces(lbp_face_cascade, rotate_img(frame, -45)))
     x, y, z = center.shape
     p, q, r = left.shape
     temp = center
