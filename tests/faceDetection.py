@@ -1,6 +1,6 @@
 import cv2
 
-from src.lbpDetectFace import detect_faces, draw_faces, rotate_img, rotate_point, draw_tilt_faces
+from src.detectFace import detect_faces, draw_faces
 
 lbp_face_cascade = cv2.CascadeClassifier('../data/lbpcascade_frontalface.xml')
 
@@ -18,7 +18,7 @@ while rval:
     cv2.imshow("exit on ESC", cv2.flip(f, 1))
     rval, frame = vc.read()
 
-    f = draw_tilt_faces(frame, lbp_face_cascade)
+    f = draw_faces(frame, detect_faces(lbp_face_cascade, frame))
 
     key = cv2.waitKey(20)
     if key == 27:  # exit on ESC

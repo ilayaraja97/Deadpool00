@@ -4,13 +4,12 @@
 ## Setting up environment
 Use ubuntu 64-bit Python 3
 ### OpenCV
-`$ sudo apt-get install python3-opencv`
+`$ sudo pip3 install python3-opencv`
 ### Tensorflow
 `$ sudo pip3 install tensorflow`
 ### Keras
 `$ sudo pip3 install keras`
 And run `testEnvironment.py`
-###
 ## Coding style
 We will stick to [PEP8](https://www.python.org/dev/peps/pep-0008/) coding style.
 

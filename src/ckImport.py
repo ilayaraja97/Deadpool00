@@ -4,7 +4,7 @@ import glob
 import cv2
 import numpy as np
 
-from src.lbpDetectFace import get_largest_face, detect_faces
+from src.detectFace import get_largest_face, detect_faces
 
 
 def importCKPlusDataset(dir='CK+', includeNeutral=False):
