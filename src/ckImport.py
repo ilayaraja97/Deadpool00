@@ -74,8 +74,8 @@ def importCKPlusDataset(dir='CK+', includeNeutral=False):
         images = labeledImages
 
     # # For testing only:
-    images = images[0:10]
-    labels = labels[0:10]
+    # images = images[0:10]
+    # labels = labels[0:10]
     return images, labels
 
 
