@@ -1,3 +1,3 @@
-from src.ck_import import getNumpyArrayForTraining
+from src.ckImport import saveNumpyArray
 
-getNumpyArrayForTraining()
+saveNumpyArray('../data/ck/CK+')
