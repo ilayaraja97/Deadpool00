@@ -23,7 +23,7 @@ else:
 f = frame
 
 font                   = cv2.FONT_HERSHEY_SIMPLEX
-bottomLeftCornerOfText = (80,30)
+bottomLeftCornerOfText = (50,30)
 fontScale              = 1
 fontColor              = (0,0,0)
 lineType               = 2
