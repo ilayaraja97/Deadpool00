@@ -2,11 +2,12 @@ import csv
 import glob
 
 import cv2
+import numpy as np
 
 from src.lbpDetectFace import get_largest_face, detect_faces
 
 
-def importCKPlusDataset(dir = 'CK+', includeNeutral = False):
+def importCKPlusDataset(dir='CK+', includeNeutral=False):
     ############################################################################
     # Function: importCKPlusDataset
     # Depending on preferences, this ranges from 309 - 920 images and labels
@@ -79,7 +80,9 @@ def importCKPlusDataset(dir = 'CK+', includeNeutral = False):
         curLabel = labelFiles[ind]
         # print(allLabeledImages[ind])
         image = cv2.imread(allLabeledImages[ind])
-        curImage = get_largest_face(image, detect_faces(cascade, image))
+        curImage = cv2.resize(get_largest_face(image, detect_faces(cascade, image)),
+                              (224, 224),
+                              interpolation=cv2.INTER_CUBIC)
         # print(curImage)
         # Open the image as binary read-only
         with open(curLabel, 'r') as csvfile:
@@ -93,7 +96,7 @@ def importCKPlusDataset(dir = 'CK+', includeNeutral = False):
             numCK = int(float(str[0]))
 
             # Get text label from CK+ number
-            labelText = categoriesCK[numCK-1]
+            labelText = categoriesCK[numCK - 1]
             # print(labelText)
             if labelText != 'Contempt' and labelText != 'Disgust':
                 numEitW = categories.index(labelText)
@@ -129,11 +132,12 @@ def importCKPlusDataset(dir = 'CK+', includeNeutral = False):
     else:
         images = labeledImages
 
-    # For testing only:
+    # # For testing only:
     images = images[0:10]
     labels = labels[0:10]
-    print(images)
-    print("HEY HIMANI")
+    print("HEY RAJA")
+    # print(images)
+    print("HEY HIMANI", np.copy(images))
     print(labels)
     return images, labels
 
@@ -148,5 +152,30 @@ def importDataset(dir):
     return imgList, labels
 
 
-input_list, labels = importDataset('../data/ck/CK')
+def translate_labels(labels):
+    # categories = ['Angry', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
+    mod = []
+    for l in labels:
+        if l == 0:
+            mod = np.append(mod, ([1, 0, 0, 0, 0, 0]))
+        elif l == 1:
+            mod = np.append(mod, ([0, 1, 0, 0, 0, 0]))
+        elif l == 2:
+            mod = np.append(mod, ([0, 0, 1, 0, 0, 0]))
+        elif l == 3:
+            mod = np.append(mod, ([0, 0, 0, 1, 0, 0]))
+        elif l == 4:
+            mod = np.append(mod, ([0, 0, 0, 0, 1, 0]))
+        elif l == 5:
+            mod = np.append(mod, ([0, 0, 0, 0, 0, 1]))
+    return np.split(mod, labels.shape[0])
+    pass
 
+
+input_list, labels = importDataset('../data/ck/CK')
+image = np.copy(input_list)
+labels = np.copy(labels)
+labels = np.copy(translate_labels(labels))
+print(image.shape, labels.shape)
+np.save('../data/x_train', image)
+np.save('../data/y_train', labels)
