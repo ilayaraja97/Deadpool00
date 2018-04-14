@@ -1,6 +1,6 @@
 # Deadpool00
 ## Teammates
-[Himani](https://github.com/HimaniRathi/Deadpool00) [Chandna](https://github.com/IamChandna/Deadpool00)
+[Himani](https://github.com/HimaniRathi/Deadpool00) | [Chandna](https://github.com/IamChandna/Deadpool00)
 ## Setting up environment
 
 ### OpenCV
