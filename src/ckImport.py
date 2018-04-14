@@ -8,26 +8,23 @@ from src.detectFace import get_largest_face, detect_faces
 
 
 def importCKPlusDataset(dir='CK+', includeNeutral=False):
-    # Note: "Neutral" is not labeled in the CK+ dataset
+    # Contempt and Disgust went into the category of Angry and Neutral is added
     categories = ['Angry', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
     categoriesCK = ['Angry', 'Contempt', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise']
 
-    # Root directories for images and labels. Should have no other .txt or .png files present
     dirImages = dir + '/Images'
     dirLabels = dir + '/Labels'
 
-    # Get all possible label and image filenames
     imageFiles = glob.glob(dirImages + '/*/*/*.png')
     labelFiles = glob.glob(dirLabels + '/*/*/*.txt')
 
-    # Get list of all labeled images:
     allLabeledImages = []
 
     for label in labelFiles:
         img = label.replace(dirLabels, dirImages)
         img = img.replace('_emotion.txt', '.png')
         allLabeledImages.append(img)
-    # Construct final set of labeled image file names and corresponding labels
+
     labeledImages = []
     labels = []
     labelNames = []
@@ -42,8 +39,8 @@ def importCKPlusDataset(dir='CK+', includeNeutral=False):
             rd = csv.reader(csvfile)
             for row in rd:
                 str = row
-                # print(int(float(str[0])))
             numCK = int(float(str[0]))
+
             labelText = categoriesCK[numCK - 1]
             if labelText != 'Contempt' and labelText != 'Disgust':
                 numEitW = categories.index(labelText)
@@ -51,13 +48,12 @@ def importCKPlusDataset(dir='CK+', includeNeutral=False):
                 labels.append(numEitW)
                 labelNames.append(labelText)
             else:
-                # Put Contempt Disgust in Angry category
+                # if Contempt or Disgust feature is noticed, it is classified under Angry
                 numEitW = categories.index('Angry')
                 labeledImages.append(curImage)
                 labels.append(numEitW)
                 labelNames.append(labelText)
     if includeNeutral:
-        # Add all neutral images to our list
         # The first image in every series is neutral
         neutralPattern = '_00000001.png'
         neutralInd = categories.index('Neutral')
@@ -71,21 +67,15 @@ def importCKPlusDataset(dir='CK+', includeNeutral=False):
                 neutralLabels.append(neutralInd)
                 neutralLabelNames.append('Neutral')
 
-        # Combine lists of labeled and neutral images
         images = labeledImages + neutralImages
         labels = labels + neutralLabels
-        labelNames = labelNames + neutralLabelNames
 
     else:
         images = labeledImages
 
     # # For testing only:
-    # images = images[0:10]
-    # labels = labels[0:10]
-    # print("HEY RAJA")
-    # print(images)
-    # print("HEY HIMANI", np.copy(images))
-    # print(labels)
+    images = images[0:10]
+    labels = labels[0:10]
     return images, labels
 
 
@@ -104,16 +94,22 @@ def translate_labels(labels):
     mod = []
     for l in labels:
         if l == 0:
+            # Angry
             mod = np.append(mod, ([1, 0, 0, 0, 0, 0]))
         elif l == 1:
+            # Fear
             mod = np.append(mod, ([0, 1, 0, 0, 0, 0]))
         elif l == 2:
+            # Happy
             mod = np.append(mod, ([0, 0, 1, 0, 0, 0]))
         elif l == 3:
+            # Sad
             mod = np.append(mod, ([0, 0, 0, 1, 0, 0]))
         elif l == 4:
+            # Surprise
             mod = np.append(mod, ([0, 0, 0, 0, 1, 0]))
         elif l == 5:
+            # Neutral
             mod = np.append(mod, ([0, 0, 0, 0, 0, 1]))
     return np.split(mod, labels.shape[0])
     pass
@@ -124,6 +120,5 @@ def saveNumpyArray(path):
     image = np.copy(input_list)
     labels = np.copy(labels)
     labels = np.copy(translate_labels(labels))
-    print(image.shape, labels.shape)
     np.save('../data/x_train', image)
     np.save('../data/y_train', labels)
