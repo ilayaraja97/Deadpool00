@@ -21,9 +21,6 @@ def importCKPlusDataset(dir='CK+', includeNeutral=False):
     labelFiles = glob.glob(dirLabels + '/*/*/*.txt')
 
     # Get list of all labeled images:
-    # Convert label filenames to image filenames
-    # Label looks like: CK_Plus/CKPlus_Labels/S005/001/S005_001_00000011_emotion.txt
-    # Image looks like: CK_Plus/CKPlus_Images/S005/001/S005_001_00000011.png
     allLabeledImages = []
 
     for label in labelFiles:
@@ -41,18 +38,12 @@ def importCKPlusDataset(dir='CK+', includeNeutral=False):
         curImage = cv2.resize(get_largest_face(image, detect_faces(cascade, image)),
                               (224, 224),
                               interpolation=cv2.INTER_CUBIC)
-        # Open the image as binary read-only
         with open(curLabel, 'r') as csvfile:
-
-            # Convert filestream to csv-reading filestream
             rd = csv.reader(csvfile)
             for row in rd:
                 str = row
                 # print(int(float(str[0])))
-            # Get integer label in CK+ format
             numCK = int(float(str[0]))
-
-            # Get text label from CK+ number
             labelText = categoriesCK[numCK - 1]
             if labelText != 'Contempt' and labelText != 'Disgust':
                 numEitW = categories.index(labelText)
@@ -60,13 +51,13 @@ def importCKPlusDataset(dir='CK+', includeNeutral=False):
                 labels.append(numEitW)
                 labelNames.append(labelText)
             else:
-                # Lump "Contempt" in with another category
+                # Put Contempt Disgust in Angry category
                 numEitW = categories.index('Angry')
                 labeledImages.append(curImage)
                 labels.append(numEitW)
                 labelNames.append(labelText)
     if includeNeutral:
-        # Add all neutral images to our list too:
+        # Add all neutral images to our list
         # The first image in every series is neutral
         neutralPattern = '_00000001.png'
         neutralInd = categories.index('Neutral')
@@ -89,12 +80,12 @@ def importCKPlusDataset(dir='CK+', includeNeutral=False):
         images = labeledImages
 
     # # For testing only:
-    images = images[0:10]
-    labels = labels[0:10]
-    print("HEY RAJA")
+    # images = images[0:10]
+    # labels = labels[0:10]
+    # print("HEY RAJA")
     # print(images)
-    print("HEY HIMANI", np.copy(images))
-    print(labels)
+    # print("HEY HIMANI", np.copy(images))
+    # print(labels)
     return images, labels
 
 
@@ -128,8 +119,8 @@ def translate_labels(labels):
     pass
 
 
-def getNumpyArrayForTraining():
-    input_list, labels = importDataset('../data/ck/CK')
+def saveNumpyArray(path):
+    input_list, labels = importDataset(path)
     image = np.copy(input_list)
     labels = np.copy(labels)
     labels = np.copy(translate_labels(labels))
