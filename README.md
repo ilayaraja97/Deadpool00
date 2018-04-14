@@ -2,7 +2,7 @@
 ## Teammates
 [Himani](https://github.com/HimaniRathi/Deadpool00) | [Chandna](https://github.com/IamChandna/Deadpool00)
 ## Setting up environment
-Use ubuntu 64bit Python 3
+Use ubuntu 64-bit Python 3
 ### OpenCV
 `$ sudo apt-get install python3-opencv`
 ### Tensorflow
