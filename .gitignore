@@ -1,3 +1,4 @@
 /.idea
-/data/ck
+/data
+/src/__pycache__
 /tests/emotion.txt
