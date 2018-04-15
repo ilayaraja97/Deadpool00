@@ -7,7 +7,7 @@ import numpy as np
 from src.detectFace import get_largest_face, detect_faces
 
 
-def importCKPlusDataset(dir='CK+', includeNeutral=False):
+def importCKPlusDataset(dir='../data/ck/CK+', includeNeutral=False):
     # Contempt and Disgust went into the category of Angry and Neutral is added
     categories = ['Angry', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
     categoriesCK = ['Angry', 'Contempt', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise']
