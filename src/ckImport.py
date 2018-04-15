@@ -7,13 +7,13 @@ import numpy as np
 from src.detectFace import get_largest_face, detect_faces
 
 
-def importCKPlusDataset(dir='../data/ck/CK+', includeNeutral=False):
+def import_ck_plus_dataset(directory, includeNeutral=False):
     # Contempt and Disgust went into the category of Angry and Neutral is added
     categories = ['Angry', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
     categoriesCK = ['Angry', 'Contempt', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise']
 
-    dirImages = dir + '/Images'
-    dirLabels = dir + '/Labels'
+    dirImages = directory + '/Images'
+    dirLabels = directory + '/Labels'
 
     imageFiles = glob.glob(dirImages + '/*/*/*.png')
     labelFiles = glob.glob(dirLabels + '/*/*/*.txt')
@@ -63,7 +63,9 @@ def importCKPlusDataset(dir='../data/ck/CK+', includeNeutral=False):
 
         for imgStr in imageFiles:
             if neutralPattern in imgStr:
-                neutralImages.append(imgStr)
+                neutralImages.append(cv2.resize(cv2.imread(imgStr),
+                                                (224, 224),
+                                                interpolation=cv2.INTER_CUBIC))
                 neutralLabels.append(neutralInd)
                 neutralLabelNames.append('Neutral')
 
@@ -79,10 +81,10 @@ def importCKPlusDataset(dir='../data/ck/CK+', includeNeutral=False):
     return images, labels
 
 
-def importDataset(dir):
-    imgList, labels = importCKPlusDataset(dir, includeNeutral=True)
+def import_dataset(directory):
+    imgList, labels = import_ck_plus_dataset(directory, includeNeutral=True)
     if len(imgList) <= 0:
-        print('Error - No images found in ' + str(dir))
+        print('Error - No images found in ' + str(directory))
         return None
 
     # Return list of filenames
@@ -115,10 +117,11 @@ def translate_labels(labels):
     pass
 
 
-def saveNumpyArray(path):
-    input_list, labels = importDataset(path)
+def save_numpy_array(path):
+    input_list, labels = import_dataset(path)
     image = np.copy(input_list)
     labels = np.copy(labels)
     labels = np.copy(translate_labels(labels))
+    print(image.shape, labels.shape)
     np.save('../data/x_train', image)
     np.save('../data/y_train', labels)

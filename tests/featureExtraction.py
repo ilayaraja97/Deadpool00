@@ -1,3 +1,3 @@
-from src.ckImport import saveNumpyArray
+from src.ckImport import save_numpy_array
 
-saveNumpyArray('../data/ck/CK+')
+save_numpy_array('../data/ck/CK+')
