@@ -1,5 +1,6 @@
 import cv2
 from keras.models import model_from_json
+import matplotlib.pyplot as plt
 
 emotion_labels = ['angry', 'fear', 'happy', 'sad', 'surprise', 'neutral']
 
@@ -50,6 +51,15 @@ def put_emoji(angry, fear, happy, sad, surprise, neutral):
         emoji = cv2.imread("../data/neutral.png")
         print(" You are neutral")
     # emoji = cv2.resize(emoji, (120, 120), interpolation=cv2.INTER_CUBIC)
-    overlay = cv2.resize(emoji, (48, 48), interpolation=cv2.INTER_AREA)
-
+    overlay = cv2.resize(emoji, (80,80), interpolation=cv2.INTER_AREA)
     return overlay, status
+
+
+def plot_emotion_matrix(angry, fear, happy, sad, surprise, neutral):
+    data = {'angry': angry, 'fear': fear, 'happy': happy, 'sad': sad, 'surprise': surprise, 'neutral': neutral}
+    fig, a = plt.subplots()
+    fig.patch.set_facecolor('none')
+    fig.patch.set_alpha(0.0)
+    a.bar(data.keys(), data.values(),0.5, color='SkyBlue', alpha = 1.0,)
+    a.yaxis.set_visible(False)
+    plt.show()
