@@ -7,7 +7,12 @@ import numpy as np
 from src.detectFace import get_largest_face, detect_faces
 
 
-def import_ck_plus_dataset(directory, includeNeutral=False):
+def rgb2gray(rgb):
+    return np.dot(rgb[..., :3], [0.299, 0.587, 0.114])
+
+
+def import_ck_plus_dataset(directory, dim, rgb):
+    includeNeutral = True
     # Contempt and Disgust went into the category of Angry and Neutral is added
     categories = ['Angry', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
     categoriesCK = ['Angry', 'Contempt', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise']
@@ -31,10 +36,13 @@ def import_ck_plus_dataset(directory, includeNeutral=False):
     cascade = cv2.CascadeClassifier('../data/lbpcascade_frontalface.xml')
     for ind in range(len(labelFiles)):
         curLabel = labelFiles[ind]
-        image = cv2.imread(allLabeledImages[ind])
-        curImage = cv2.resize(get_largest_face(image, detect_faces(cascade, image)),
-                              (224, 224),
+        image = cv2.imread(allLabeledImages[ind], 0)
+        temp = get_largest_face(image, detect_faces(cascade, image, is_gray=True))
+        curImage = cv2.resize(temp,
+                              dim,
                               interpolation=cv2.INTER_CUBIC)
+        # if not rgb:
+        #     curImage = rgb2gray(curImage)
         with open(curLabel, 'r') as csvfile:
             rd = csv.reader(csvfile)
             for row in rd:
@@ -63,9 +71,14 @@ def import_ck_plus_dataset(directory, includeNeutral=False):
 
         for imgStr in imageFiles:
             if neutralPattern in imgStr:
-                neutralImages.append(cv2.resize(cv2.imread(imgStr),
-                                                (224, 224),
-                                                interpolation=cv2.INTER_CUBIC))
+                image = cv2.imread(imgStr, 0)
+                temp = get_largest_face(image, detect_faces(cascade, image, is_gray=True))
+                temp = cv2.resize(temp,
+                                  dim,
+                                  interpolation=cv2.INTER_CUBIC)
+                # if not rgb:
+                #     curImage = rgb2gray(curImage)
+                neutralImages.append(temp)
                 neutralLabels.append(neutralInd)
                 neutralLabelNames.append('Neutral')
 
@@ -78,11 +91,13 @@ def import_ck_plus_dataset(directory, includeNeutral=False):
     # # For testing only:
     # images = images[0:10]
     # labels = labels[0:10]
+    # print(np.copy(images).shape)
+
     return images, labels
 
 
 def import_dataset(directory):
-    imgList, labels = import_ck_plus_dataset(directory, includeNeutral=True)
+    imgList, labels = import_ck_plus_dataset(directory, (48, 48), rgb=False)
     if len(imgList) <= 0:
         print('Error - No images found in ' + str(directory))
         return None
@@ -120,8 +135,9 @@ def translate_labels(labels):
 def save_numpy_array(path):
     input_list, labels = import_dataset(path)
     image = np.copy(input_list)
+    image = image.reshape(-1, image.shape[2], image.shape[1], 1)
     labels = np.copy(labels)
     labels = np.copy(translate_labels(labels))
     print(image.shape, labels.shape)
-    np.save('../data/x_train', image)
-    np.save('../data/y_train', labels)
+    np.save('../data/x_train2', image)
+    np.save('../data/y_train2', labels)
