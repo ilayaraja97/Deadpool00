@@ -4,27 +4,32 @@ from keras.models import model_from_json
 import matplotlib
 import matplotlib.pyplot as plt
 
+shape = (48, 48)
+shapec = (1, 48, 48, 1)
+
 matplotlib.use("TkAgg")
 
 emotion_labels = ['angry', 'fear', 'happy', 'sad', 'surprise', 'neutral']
 
 # load json and create model arch
-json_file = open('../data/model.json', 'r')
+json_file = open('../data/modeldeep2.json', 'r')
 loaded_model_json = json_file.read()
 json_file.close()
 model = model_from_json(loaded_model_json)
 
 # load weights into new model
-model.load_weights('../data/model.h5')
+model.load_weights('../data/modeldeep2.h5')
 
 # figure
 # fig = plt.figure()
 
 
 def predict_emotion(face_image):  # a single cropped face
-    gray = cv2.cvtColor(face_image, cv2.COLOR_BGR2GRAY)
-    resized_img = cv2.resize(gray, (48, 48), interpolation=cv2.INTER_AREA)
-    image = resized_img.reshape(1, 1, 48, 48)
+    gray = face_image
+    if shapec[3] == 1:
+        gray = cv2.cvtColor(face_image, cv2.COLOR_BGR2GRAY)
+    resized_img = cv2.resize(gray, shape, interpolation=cv2.INTER_AREA)
+    image = resized_img.reshape(shapec)
     list_of_list = model.predict(image, batch_size=1, verbose=1)
     angry, fear, happy, sad, surprise, neutral = [prob for lst in list_of_list for prob in lst]
     return [angry, fear, happy, sad, surprise, neutral]

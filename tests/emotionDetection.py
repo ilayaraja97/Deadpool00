@@ -38,6 +38,7 @@ while rval:
         framerate = framerate + 1
         frame = cv2.flip(frame, 1)
         angry, fear, happy, sad, surprise, neutral = predict_emotion(temp)
+
         if framerate % 20 == 0:
             print("plot")
             plot = plot_emotion_matrix(angry, fear, happy, sad, surprise, neutral, frame)
