@@ -1,9 +1,9 @@
 import time
-import matplotlib.pyplot as plt
 import cv2
 
 from src.detectFace import detect_faces, get_largest_face, crop_rot_images
 from src.testing import predict_emotion, put_emoji, plot_emotion_matrix
+
 
 # set emotions (6)
 emotion_labels = ['angry', 'fear', 'happy', 'sad', 'surprise', 'neutral']
@@ -24,6 +24,8 @@ if vc.isOpened():  # try to get the first frame
 else:
     rval = False
 f = cv2.flip(frame, 1)
+framerate = 0
+plot=frame[-120:, 0:120]
 while rval:
     cv2.imshow("exit on ESC", f)
     rval, frame = vc.read()
@@ -33,10 +35,16 @@ while rval:
     temp = get_largest_face(frame, detect_faces(lbp_face_cascade, frame), draw_face=True)
 
     if temp.shape != (0, 0, 3):
-        angry, fear, happy, sad, surprise, neutral = predict_emotion(temp)
-        plot_emotion_matrix(angry, fear, happy, sad, surprise, neutral)
-        overlay, status = put_emoji(angry, fear, happy, sad, surprise, neutral)
+        framerate = framerate + 1
         frame = cv2.flip(frame, 1)
+        angry, fear, happy, sad, surprise, neutral = predict_emotion(temp)
+
+        if framerate % 20 == 0:
+            print("plot")
+            plot = plot_emotion_matrix(angry, fear, happy, sad, surprise, neutral, frame)
+
+        overlay, status = put_emoji(angry, fear, happy, sad, surprise, neutral)
+        cv2.addWeighted(plot, 0.9, frame[-120:, 0:120], 0.1, 0, frame[-120:, 0:120])
         cv2.addWeighted(overlay, 0.9, frame[0:80, 0:80], 0.1, 0, frame[0:80, 0:80])
         cv2.putText(frame, status, bottomLeftCornerOfText, font, fontScale, fontColor, lineType)
 

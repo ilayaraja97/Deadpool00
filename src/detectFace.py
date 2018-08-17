@@ -3,10 +3,12 @@ import cv2
 import math
 
 
-def detect_faces(f_cascade, colored_img, scale_factor=1.1):
+def detect_faces(f_cascade, colored_img, scale_factor=1.1, is_gray=False):
     img_copy = np.copy(colored_img)
     # convert to gray
-    gray = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
+    gray = img_copy
+    if not is_gray:
+        gray = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
 
     faces = f_cascade.detectMultiScale(gray, scaleFactor=scale_factor, minNeighbors=6)
     return faces
@@ -15,8 +17,10 @@ def detect_faces(f_cascade, colored_img, scale_factor=1.1):
 def crop_rot_images(frame, lbp_face_cascade, draw_face=False):
     # optimization req
     center, xc, yc, wc, hc = get_largest_face(frame, detect_faces(lbp_face_cascade, frame), return_face=True)
-    left, xl, yl, wl, hl = get_largest_face(rotate_img(frame, 45), detect_faces(lbp_face_cascade, rotate_img(frame, 45)), return_face=True)
-    right, xr, yr, wr, hr = get_largest_face(rotate_img(frame, -45), detect_faces(lbp_face_cascade, rotate_img(frame, -45)), return_face=True)
+    left, xl, yl, wl, hl = get_largest_face(rotate_img(frame, 45),
+                                            detect_faces(lbp_face_cascade, rotate_img(frame, 45)), return_face=True)
+    right, xr, yr, wr, hr = get_largest_face(rotate_img(frame, -45),
+                                             detect_faces(lbp_face_cascade, rotate_img(frame, -45)), return_face=True)
     x, y, z = center.shape
     p, q, r = left.shape
     temp = center
@@ -100,6 +104,6 @@ def get_largest_face(img, faces, draw_face=False, return_face=False):
 
     crop_img = img[b:b + d, a:a + c]
     if return_face:
-        return crop_img, a, b, a +c, b + d
+        return crop_img, a, b, a + c, b + d
     else:
         return crop_img

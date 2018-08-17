@@ -4,6 +4,8 @@ import platform
 import tensorflow as tf
 import keras
 import math
+import matplotlib
+matplotlib.use('TkAgg')
 
 print(platform.architecture())
 print("numpy "+np.__version__)
