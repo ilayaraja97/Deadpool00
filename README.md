@@ -4,7 +4,7 @@
 ## Setting up environment
 Use ubuntu 64-bit Python 3
 ### OpenCV
-`$ sudo pip3 install python3-opencv`
+`$ sudo apt install python3-opencv`
 ### Tensorflow
 `$ sudo pip3 install tensorflow`
 ### Keras
